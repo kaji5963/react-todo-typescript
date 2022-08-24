@@ -1,4 +1,4 @@
-body {
+html {
   width: 100%;
   height: 100%;
   font-family: 'Times New Roman', Times, serif;
@@ -19,13 +19,16 @@ header {
 
 }
 
+.container-input form {
+  display: flex;
+}
+
 .addButton {
   margin-left: 20px;
 }
 
 .container-list {
   background-color: antiquewhite;
-  min-height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;

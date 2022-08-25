@@ -16,22 +16,27 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .container-input form {
   display: flex;
+  align-items: flex-end;
 }
 
 .addButton {
   margin-left: 20px;
+  height: 30px;
 }
 
 .container-list {
   background-color: antiquewhite;
+
+}
+
+.container-list ul {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  list-style: none;
 }
 

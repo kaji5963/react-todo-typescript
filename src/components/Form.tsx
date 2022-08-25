@@ -23,7 +23,7 @@ export const Form = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newTodo: Todo = {
-      id: todo.length,
+      id: Math.floor(Math.random() * 300),
       inputValue: inputValue,
       checked: false,
     };
@@ -33,7 +33,7 @@ export const Form = () => {
 
   const handleAddButton = (e: any) => {
     const newTodo: Todo = {
-      id: todo.length,
+      id: Math.floor(Math.random() * 300),
       inputValue: inputValue,
       checked: false,
     };
@@ -49,6 +49,11 @@ export const Form = () => {
       return todo
     })
     setTodo(editTodo)
+  }
+
+  const handleDelete = (id: number) => {
+    const deleteTodo = todo.filter((todo) => todo.id !== id)
+    setTodo(deleteTodo)
   }
 
   return (
@@ -94,7 +99,7 @@ export const Form = () => {
                 <ChipDelete
                   color="danger"
                   variant="plain"
-                  onClick={() => alert("delete button!")}
+                  onClick={() => handleDelete(todo.id)}
                 >
                   <DeleteForever />
                 </ChipDelete>

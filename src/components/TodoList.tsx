@@ -9,24 +9,28 @@ import DeleteForever from "@mui/icons-material/DeleteForever";
 import { pink } from "@mui/material/colors";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export const Form = () => {
+export const TodoList = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [todo, setTodo] = useState<Todo[]>([]);
+
   type Todo = {
     id: number;
     inputValue: string;
     checked: boolean;
   };
 
-  const [inputValue, setInputValue] = useState("");
-  const [todo, setTodo] = useState<Todo[]>([]);
+  const initialState = {
+    task: {
+      id: Math.floor(Math.random() * 300),
+      inputValue: inputValue,
+      checked: false,
+    },
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (inputValue === "") return;
     e.preventDefault();
-    const newTodo: Todo = {
-      id: Math.floor(Math.random() * 300),
-      inputValue: inputValue,
-      checked: false,
-    };
+    const newTodo: Todo = initialState.task;
     setTodo([newTodo, ...todo]);
     setInputValue("");
   };
@@ -35,46 +39,42 @@ export const Form = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     if (inputValue === "") return;
-    const newTodo: Todo = {
-      id: Math.floor(Math.random() * 300),
-      inputValue: inputValue,
-      checked: false,
-    };
+    const newTodo: Todo = initialState.task;
     setTodo([newTodo, ...todo]);
     setInputValue("");
   };
 
   const handleEdit = (id: number, inputValue: string) => {
     const editTodo = todo.map((todo) => {
-      if( todo.id === id){
-        todo.inputValue = inputValue
+      if (todo.id === id) {
+        todo.inputValue = inputValue;
       }
-      return todo
-    })
-    setTodo(editTodo)
-  }
+      return todo;
+    });
+    setTodo(editTodo);
+  };
 
   const handleDelete = (id: number) => {
-    const deleteTodo = todo.filter((todo) => todo.id !== id)
-    setTodo(deleteTodo)
-  }
+    const deleteTodo = todo.filter((todo) => todo.id !== id);
+    setTodo(deleteTodo);
+  };
 
   const handleChecked = (id: number, checked: boolean) => {
     const checkTodo = todo.map((todo) => {
-      if ( todo.id === id) {
-        todo.checked = !checked 
+      if (todo.id === id) {
+        todo.checked = !checked;
       }
-      return todo
-    })
-    setTodo(checkTodo)
-  }
+      return todo;
+    });
+    setTodo(checkTodo);
+  };
 
   return (
     <>
       <div className="container-input">
         <form onSubmit={(e) => handleSubmit(e)}>
           <TextField
-            label="add your TODO"
+            label="Add Your Todo"
             id="filled-size-normal"
             variant="standard"
             value={inputValue}
@@ -82,13 +82,26 @@ export const Form = () => {
               target: { value: React.SetStateAction<string> };
             }) => setInputValue(e.target.value)}
           />
-
           <Stack spacing={2} direction="row" className="addButton">
             <Button onClick={(e) => handleAddButton(e)} variant="contained">
-              add TODO
+              ADD TODO
             </Button>
           </Stack>
         </form>
+      </div>
+
+      <div className="container-button">
+        <Stack spacing={2} direction="row" className="addButton">
+          <Button onClick={() => alert("all")} variant="outlined">
+            ALL
+          </Button>
+          <Button onClick={() => alert("complete")} variant="outlined">
+            COMPLETE
+          </Button>
+          <Button onClick={() => alert("incomplete")} variant="outlined">
+            INCOMPLETE
+          </Button>
+        </Stack>
       </div>
 
       {todo.map((todo) => {
@@ -130,3 +143,4 @@ export const Form = () => {
     </>
   );
 };
+

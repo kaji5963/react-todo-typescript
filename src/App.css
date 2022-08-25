@@ -5,13 +5,10 @@ html {
 }
 
 header {
-  background-color: pink;
   text-align: center;
 }
 
-
 .container-input {
-  background-color: skyblue;
   height: 120px;
   display: flex;
   justify-content: center;
@@ -28,9 +25,24 @@ header {
   height: 30px;
 }
 
-.container-list {
-  background-color: antiquewhite;
+.container-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 40px;
 
+}
+
+.container-list {
+  height: 50px;
+  margin-right: 50px;
+}
+
+.container-list input {
+  height: 20px;
+  width: 250px;
+  margin-right: 20px;
+  font-size: 16px;
 }
 
 .container-list ul {

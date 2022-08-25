@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
 import ChipDelete from "@mui/joy/ChipDelete";
 import DeleteForever from "@mui/icons-material/DeleteForever";
-
 import { pink } from "@mui/material/colors";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -21,6 +20,7 @@ export const Form = () => {
   const [todo, setTodo] = useState<Todo[]>([]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (inputValue === "") return;
     e.preventDefault();
     const newTodo: Todo = {
       id: Math.floor(Math.random() * 300),
@@ -31,7 +31,10 @@ export const Form = () => {
     setInputValue("");
   };
 
-  const handleAddButton = (e: any) => {
+  const handleAddButton = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (inputValue === "") return;
     const newTodo: Todo = {
       id: Math.floor(Math.random() * 300),
       inputValue: inputValue,
@@ -54,6 +57,16 @@ export const Form = () => {
   const handleDelete = (id: number) => {
     const deleteTodo = todo.filter((todo) => todo.id !== id)
     setTodo(deleteTodo)
+  }
+
+  const handleChecked = (id: number, checked: boolean) => {
+    const checkTodo = todo.map((todo) => {
+      if ( todo.id === id) {
+        todo.checked = !checked 
+      }
+      return todo
+    })
+    setTodo(checkTodo)
   }
 
   return (
@@ -83,7 +96,12 @@ export const Form = () => {
           <div key={todo.id} className="container-list">
             <ul>
               <li>
-              <input type="text" value={todo.inputValue} onChange={(e) => handleEdit(todo.id, e.target.value)} />
+                <input
+                  type="text"
+                  value={todo.inputValue}
+                  onChange={(e) => handleEdit(todo.id, e.target.value)}
+                  disabled={todo.checked}
+                />
               </li>
               <Checkbox
                 {...label}
@@ -93,6 +111,7 @@ export const Form = () => {
                     color: pink[600],
                   },
                 }}
+                onChange={() => handleChecked(todo.id, todo.checked)}
               />
 
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>

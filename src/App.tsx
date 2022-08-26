@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
+import { Header } from "./components/Header";
 import { TodoList } from "./components/TodoList";
 
-export const App = (): JSX.Element => {
+export const App = () => {
+  
   return (
     <div>
-      <header>
-        <h1>~ React Todo App of Typescript ~</h1>
-      </header>
+      <Header />
       <TodoList />
     </div>
   );

@@ -14,27 +14,36 @@ export const TodoList = () => {
   const [todo, setTodo] = useState<Todo[]>([]);
 
   type Todo = {
-    id: number;
+    id: number | string;
     inputValue: string;
-    checked: boolean;
+    completed: boolean;
+    status: string;
   };
 
   const initialState = {
     task: {
-      id: Math.floor(Math.random() * 300),
+      id: Math.floor(Math.random() * 1000).toString(16),
       inputValue: inputValue,
-      checked: false,
+      completed: false,
+      status: "incomplete",
     },
   };
 
+  // const todoStatus = {
+  //   all: "all",
+  //   complete: "complete",
+  //   incomplete: "incomplete",
+  // }
+
+  //formの送信機能
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    if (inputValue === "") return;
     e.preventDefault();
+    if (inputValue === "") return;
     const newTodo: Todo = initialState.task;
     setTodo([newTodo, ...todo]);
     setInputValue("");
   };
-
+  //-Todoの追加処理
   const handleAddButton = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -43,8 +52,8 @@ export const TodoList = () => {
     setTodo([newTodo, ...todo]);
     setInputValue("");
   };
-
-  const handleEdit = (id: number, inputValue: string) => {
+  //タスクの編集機能
+  const handleEdit = (id: number | string, inputValue: string) => {
     const editTodo = todo.map((todo) => {
       if (todo.id === id) {
         todo.inputValue = inputValue;
@@ -53,16 +62,16 @@ export const TodoList = () => {
     });
     setTodo(editTodo);
   };
-
-  const handleDelete = (id: number) => {
+  //タスクの削除機能
+  const handleDelete = (id: number | string) => {
     const deleteTodo = todo.filter((todo) => todo.id !== id);
     setTodo(deleteTodo);
   };
-
-  const handleChecked = (id: number, checked: boolean) => {
+  //完了の切り替え機能
+  const handleCompleted = (id: number | string, completed: boolean) => {
     const checkTodo = todo.map((todo) => {
       if (todo.id === id) {
-        todo.checked = !checked;
+        todo.completed = !completed;
       }
       return todo;
     });
@@ -71,6 +80,7 @@ export const TodoList = () => {
 
   return (
     <>
+      {/* form及び追加ボタン */}
       <div className="container-input">
         <form onSubmit={(e) => handleSubmit(e)}>
           <TextField
@@ -89,21 +99,30 @@ export const TodoList = () => {
           </Stack>
         </form>
       </div>
-
+      {/* 完了及び未完了タスク数 */}
+      <div className="container-task">
+        <div className="task-one">
+          未完了タスク: {todo.filter((todo) => !todo.completed).length}
+        </div>
+        <div className="task-two">
+          完了タスク: {todo.filter((todo) => todo.completed).length}
+        </div>
+      </div>
+      {/* ステータス切り替えボタン */}
       <div className="container-button">
         <Stack spacing={2} direction="row" className="addButton">
-          <Button onClick={() => alert("all")} variant="outlined">
+          <Button onClick={() => console.log(todo)} variant="outlined">
             ALL
           </Button>
-          <Button onClick={() => alert("complete")} variant="outlined">
+          <Button onClick={() => console.log(todo)} variant="outlined">
             COMPLETE
           </Button>
-          <Button onClick={() => alert("incomplete")} variant="outlined">
+          <Button onClick={() => console.log(todo)} variant="outlined">
             INCOMPLETE
           </Button>
         </Stack>
       </div>
-
+      {/* リスト・チェックボックス・削除 */}
       {todo.map((todo) => {
         return (
           <div key={todo.id} className="container-list">
@@ -113,7 +132,7 @@ export const TodoList = () => {
                   type="text"
                   value={todo.inputValue}
                   onChange={(e) => handleEdit(todo.id, e.target.value)}
-                  disabled={todo.checked}
+                  disabled={todo.completed}
                 />
               </li>
               <Checkbox
@@ -124,9 +143,8 @@ export const TodoList = () => {
                     color: pink[600],
                   },
                 }}
-                onChange={() => handleChecked(todo.id, todo.checked)}
+                onChange={() => handleCompleted(todo.id, todo.completed)}
               />
-
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                 <ChipDelete
                   color="danger"
@@ -142,5 +160,5 @@ export const TodoList = () => {
       })}
     </>
   );
-};
+};;
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -9,17 +9,31 @@ import DeleteForever from "@mui/icons-material/DeleteForever";
 import { pink } from "@mui/material/colors";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
+//-Todoの型を宣言
+type Todo = {
+  id: number | string;
+  inputValue: string;
+  completed: boolean;
+};
+
 export const TodoList = () => {
+  //state宣言
   const [inputValue, setInputValue] = useState("");
-  const [todo, setTodo] = useState<Todo[]>([]);
+  const [todo, setTodo] = useState<Todo[]>(() => {
+    //localStorageに保存
+    const savedTodo = localStorage.getItem("todo");
+    if (savedTodo) {
+      return JSON.parse(savedTodo);
+    } else {
+      return [];
+    }
+  });
   const [filterStatus, setFilterStatus] = useState(0);
-
-  type Todo = {
-    id: number | string;
-    inputValue: string;
-    completed: boolean;
-  };
-
+  //localStorageから復元（Todoを監視）
+  useEffect(() => {
+    localStorage.setItem("todo", JSON.stringify(todo));
+  }, [todo]);
+  //-Todoの初期状態
   const initialState = {
     task: {
       id: Math.floor(Math.random() * 1000).toString(16),
@@ -27,8 +41,7 @@ export const TodoList = () => {
       completed: false,
     },
   };
-
-  //formの送信機能
+  //formの送信処理
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputValue === "") return;
@@ -37,7 +50,7 @@ export const TodoList = () => {
     setInputValue("");
   };
   //-Todoの追加処理
-  const handleAddButton = (
+  const handleAddTodoButton = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     if (inputValue === "") return;
@@ -45,7 +58,7 @@ export const TodoList = () => {
     setTodo([newTodo, ...todo]);
     setInputValue("");
   };
-  //タスクの編集機能
+  //タスクの編集処理
   const handleEdit = (id: number | string, inputValue: string) => {
     const editTodo = todo.map((todo) => {
       if (todo.id === id) {
@@ -55,13 +68,13 @@ export const TodoList = () => {
     });
     setTodo(editTodo);
   };
-  //タスクの削除機能
+  //タスクの削除処理
   const handleDelete = (id: number | string) => {
     const deleteTodo = todo.filter((todo) => todo.id !== id);
     setTodo(deleteTodo);
   };
-  //完了の切り替え機能
-  const handleToggleCompleted = (id: number | string) => {
+  //完了・未完了の切り替え処理
+  const handleSwitch = (id: number | string) => {
     const checkTodo = todo.map((todo) => {
       if (todo.id === id) {
         todo.completed = !todo.completed;
@@ -70,7 +83,7 @@ export const TodoList = () => {
     });
     setTodo(checkTodo);
   };
-  //絞り込み機能
+  //絞り込み処理
   const all = () => {
     setFilterStatus(0);
   };
@@ -96,7 +109,7 @@ export const TodoList = () => {
             }) => setInputValue(e.target.value)}
           />
           <Stack spacing={2} direction="row" className="addButton">
-            <Button onClick={(e) => handleAddButton(e)} variant="contained">
+            <Button onClick={(e) => handleAddTodoButton(e)} variant="contained">
               ADD TODO
             </Button>
           </Stack>
@@ -105,27 +118,39 @@ export const TodoList = () => {
       {/* 完了及び未完了タスク数 */}
       <div className="container-task">
         <div className="task-one">
-          未完了タスク: {todo.filter((todo) => !todo.completed).length}
+          DONE: {todo.filter((todo) => todo.completed).length}
         </div>
         <div className="task-two">
-          完了タスク: {todo.filter((todo) => todo.completed).length}
+          UNDONE: {todo.filter((todo) => !todo.completed).length}
         </div>
       </div>
-      {/* ステータス切り替えボタン */}
+      {/* 全て・完了・未完了切り替えボタン */}
       <div className="container-button">
         <Stack spacing={2} direction="row" className="addButton">
-          <Button onClick={all} variant="outlined">
+          <Button
+            className="container-button-item"
+            onClick={all}
+            variant="outlined"
+          >
             ALL
           </Button>
-          <Button onClick={done} variant="outlined">
+          <Button
+            className="container-button-item"
+            onClick={done}
+            variant="outlined"
+          >
             DONE
           </Button>
-          <Button onClick={unDone} variant="outlined">
+          <Button
+            className="container-button-item"
+            onClick={unDone}
+            variant="outlined"
+          >
             UNDONE
           </Button>
         </Stack>
       </div>
-      {/* リスト・チェックボックス・削除 */}
+      {/* リスト・チェックボックス・削除ボタン */}
       {todo.map((todo) => {
         if (filterStatus === 1 && !todo.completed) return;
 
@@ -151,7 +176,8 @@ export const TodoList = () => {
                   },
                 }}
                 checked={todo.completed}
-                onChange={() => handleToggleCompleted(todo.id)}
+                onChange={() => handleSwitch(todo.id)}
+                className="container-checkbox"
               />
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                 <ChipDelete
@@ -168,4 +194,4 @@ export const TodoList = () => {
       })}
     </>
   );
-};;
+};

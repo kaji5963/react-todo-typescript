@@ -67,6 +67,10 @@ header {
   font-size: 16px;
 }
 
+.container-list input::placeholder {
+  color: rgb(220, 85, 85);
+}
+
 .container-list ul {
   display: flex;
   justify-content: center;
@@ -92,6 +96,7 @@ input {
 .container-task {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 30px;
 }
 
@@ -102,7 +107,7 @@ input {
 }
 
 .task-two {
-  margin-right: 10px;
+  margin-right: 40px;
   font-size: 16px;
   font-weight: bold;
 }

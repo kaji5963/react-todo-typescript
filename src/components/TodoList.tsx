@@ -20,7 +20,7 @@ export const TodoList = () => {
   //state宣言
   const [inputValue, setInputValue] = useState("");
   const [todo, setTodo] = useState<Todo[]>(() => {
-    //localStorageに保存
+    // localStorageに保存;
     const savedTodo = localStorage.getItem("todo");
     if (savedTodo) {
       return JSON.parse(savedTodo);
@@ -89,10 +89,9 @@ export const TodoList = () => {
   };
   //完了・未完了の切り替え処理
   const handleSwitch = (id: string) => {
-    const checkTodo = todo.map((todo) => {
-      todo.id === id && (todo.completed = !todo.completed);
-      return todo;
-    });
+    const checkTodo = todo.map((todo) =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    );
     setTodo(checkTodo);
   };
   //絞り込み処理

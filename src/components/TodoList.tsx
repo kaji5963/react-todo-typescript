@@ -76,10 +76,9 @@ export const TodoList = () => {
   };
   //タスクの編集処理
   const handleEdit = (id: string, inputValue: string) => {
-    const editTodo = todo.map((todo) => {
-      todo.id === id && (todo.inputValue = inputValue);
-      return todo;
-    });
+    const editTodo = todo.map((todo) => 
+      todo.id === id ? {...todo, inputValue: inputValue} : todo
+    );
     setTodo(editTodo);
   };
   //タスクの削除処理
